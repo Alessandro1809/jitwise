@@ -13,7 +13,7 @@ const HowItWorksSection = () => {
               How It Works
             </p>
             <h2 className="mt-4 text-4xl font-bold text-white md:text-5xl">
-              From idea to defensible estimate.
+              From intake to estimate - fast.
             </h2>
           </div>
           <SpotlightCards
@@ -24,23 +24,23 @@ const HowItWorksSection = () => {
             items={[
               {
                 icon: FiTarget,
-                title: "Define Scope",
+                title: "Break scope into modules",
                 description:
-                  "Break down features, complexity levels, and project modules. No vague descriptions. Every decision adds measurable weight.",
+                  "Select what's included (auth, CRUDs, integrations, files, realtime, delivery). Choose basic vs complex.",
                 color: "#60a5fa",
               },
               {
                 icon: FiShield,
-                title: "Apply Risk & Constraints",
+                title: "Score risk and constraints",
                 description:
-                  "Account for uncertainty, timeline pressure, and architectural complexity. Jitwise doesn't ignore risk - it models it.",
+                  "Capture ambiguity, dependencies, change likelihood, and deadlines - then apply a risk-aware multiplier.",
                 color: "#f59e0b",
               },
               {
                 icon: FiClipboard,
-                title: "Generate Structured Output",
+                title: "Generate a defendable range",
                 description:
-                  "Effort range (min / probable / max)\nPricing range\nA structured client summary\nNot just numbers - reasoning.",
+                  "Get hours + cost ranges and a client-ready summary you can copy into a proposal or email.",
                 color: "#34d399",
               },
             ]}

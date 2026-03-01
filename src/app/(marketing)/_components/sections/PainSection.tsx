@@ -15,21 +15,20 @@ const PainSection = () => {
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-jityellow">
-              The Pain
+              Problem
             </p>
             <h2 className="mt-4 text-4xl font-bold text-white md:text-5xl">
-              Most estimates fail before they begin.
+              Estimates fail at the edges.
             </h2>
             <p className="mt-6 text-lg text-white/70">
-              Developers don't struggle with code - they struggle with undefined
-              scope.
+              Most underestimates don't come from bad math.
             </p>
             <p className="mt-4 text-lg text-white/70">
-              Unclear requirements. Hidden complexity. Optimistic timelines.
-              And when reality hits, margins shrink and trust erodes.
+              They come from unclear scope, hidden dependencies, and "invisible"
+              delivery work.
             </p>
             <p className="mt-6 text-lg font-semibold text-white">
-              Estimating isn't guessing hours. It's structuring decisions.
+              A single number hides uncertainty and creates scope fights later.
             </p>
           </div>
           <div className="space-y-6">
@@ -41,17 +40,17 @@ const PainSection = () => {
               items={[
                 {
                   icon: FiLayers,
-                  title: "Scope without boundaries",
+                  title: "Unclear scope",
                   color: "#60a5fa",
                 },
                 {
                   icon: FiGitBranch,
-                  title: "Dependencies ignored until late",
+                  title: "Hidden dependencies",
                   color: "#f472b6",
                 },
                 {
                   icon: FiAlertTriangle,
-                  title: "Risk treated as a footnote",
+                  title: "\"Invisible\" delivery work",
                   color: "#f59e0b",
                 },
               ]}
@@ -66,7 +65,7 @@ const PainSection = () => {
                   icon: FiTrendingDown,
                   title: "Result",
                   description:
-                    "Teams enter negotiations with weak reasoning and lose control over price and scope.",
+                    "A single number hides uncertainty and creates scope fights later.",
                   color: "#a78bfa",
                 },
               ]}

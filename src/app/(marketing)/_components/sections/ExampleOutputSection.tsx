@@ -3,7 +3,6 @@
 import SpotlightCards from "@/components/kokonutui/spotlight-cards";
 import {
   FiBarChart2,
-  FiCheckCircle,
   FiFileText,
   FiShield,
 } from "react-icons/fi";
@@ -18,10 +17,10 @@ const ExampleOutputSection = () => {
               Example Output
             </p>
             <h2 className="mt-4 text-4xl font-bold text-white md:text-5xl">
-              What structured estimation looks like.
+              What you get in one click.
             </h2>
             <p className="mt-6 text-lg text-white/70">
-              Jitwise doesn't just output a number. It provides:
+              Effort: min / probable / max hours
             </p>
             <div className="mt-6">
               <SpotlightCards
@@ -31,31 +30,26 @@ const ExampleOutputSection = () => {
                 gridClassName="grid-cols-1 sm:grid-cols-2"
                 items={[
                   {
-                    icon: FiFileText,
-                    title: "Scope breakdown",
-                    color: "#60a5fa",
-                  },
-                  {
                     icon: FiBarChart2,
-                    title: "Complexity reasoning",
+                    title: "Pricing: min / probable / max cost (your rate)",
                     color: "#f59e0b",
                   },
                   {
-                    icon: FiShield,
-                    title: "Risk-adjusted ranges",
-                    color: "#34d399",
+                    icon: FiFileText,
+                    title: "Included scope: modules selected",
+                    color: "#60a5fa",
                   },
                   {
-                    icon: FiCheckCircle,
-                    title: "Transparent pricing logic",
+                    icon: FiShield,
+                    title:
+                      "Assumptions + exclusions: written in plain English",
                     color: "#a78bfa",
                   },
                 ]}
               />
             </div>
             <p className="mt-6 text-lg text-white/80">
-              So you can explain why the estimate is what it is. Confidence
-              replaces negotiation anxiety.
+              So the estimate is explainable - not just "a number."
             </p>
           </div>
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6">

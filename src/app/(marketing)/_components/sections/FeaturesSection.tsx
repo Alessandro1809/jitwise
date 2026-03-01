@@ -1,7 +1,14 @@
  "use client";
 
 import SpotlightCards from "@/components/kokonutui/spotlight-cards";
-import { FiActivity, FiCode, FiFileText, FiLayers } from "react-icons/fi";
+import {
+  FiActivity,
+  FiBarChart2,
+  FiCheckSquare,
+  FiCode,
+  FiFileText,
+  FiLayers,
+} from "react-icons/fi";
 
 const FeaturesSection = () => {
   return (
@@ -12,7 +19,7 @@ const FeaturesSection = () => {
             Features
           </p>
           <h2 className="mt-4 text-4xl font-bold text-white md:text-5xl">
-            Built for developers who take estimation seriously.
+            Built for real-world quoting.
           </h2>
         </div>
         <div className="mt-10">
@@ -23,32 +30,46 @@ const FeaturesSection = () => {
             gridClassName="grid-cols-1 sm:grid-cols-2"
             items={[
               {
-                icon: FiLayers,
-                title: "Scope-Based Engine",
+                icon: FiCheckSquare,
+                title: "Scope-first checklist",
                 description:
-                  "Every module carries weighted complexity. No more flat \"feature = 10 hours\" thinking.",
+                  "Prompts that prevent under-scoping early and improve scope management.",
                 color: "#60a5fa",
               },
               {
-                icon: FiActivity,
-                title: "Risk-Aware Modeling",
+                icon: FiLayers,
+                title: "Complexity-aware modules",
                 description:
-                  "Deadlines, uncertainty, and external dependencies affect output - as they should.",
+                  "Basic vs complex changes the estimate transparently for a clear requirements breakdown.",
+                color: "#f472b6",
+              },
+              {
+                icon: FiActivity,
+                title: "Risk multipliers",
+                description:
+                  "Uncertainty is priced in with a risk buffer, not ignored.",
                 color: "#f59e0b",
               },
               {
-                icon: FiFileText,
-                title: "Defendable Client Summary",
+                icon: FiBarChart2,
+                title: "Range output",
                 description:
-                  "Automatically generate structured explanations you can send to clients. Because transparency builds trust.",
+                  "Min / probable / max time and cost estimate range - no false precision.",
                 color: "#34d399",
               },
               {
-                icon: FiCode,
-                title: "Engineering-First Approach",
+                icon: FiFileText,
+                title: "Client-ready summary",
                 description:
-                  "No buzzwords. No AI magic pricing. Just structured logic and clarity.",
+                  "Scope + assumptions + exclusions, ready for a project quote or proposal.",
                 color: "#a78bfa",
+              },
+              {
+                icon: FiCode,
+                title: "Developer-friendly",
+                description:
+                  "Works as a workflow now; extensible to an estimation template, engine + CLI later.",
+                color: "#22c55e",
               },
             ]}
           />

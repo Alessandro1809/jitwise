@@ -1,7 +1,7 @@
  "use client";
 
 import SpotlightCards from "@/components/kokonutui/spotlight-cards";
-import { FiDollarSign, FiMessageSquare, FiTrendingUp, FiUserCheck } from "react-icons/fi";
+import { FiDollarSign, FiMessageSquare, FiTrendingUp } from "react-icons/fi";
 
 const SocialProofSection = () => {
   return (
@@ -9,14 +9,15 @@ const SocialProofSection = () => {
       <div className="container mx-auto max-w-6xl px-4">
         <div className="rounded-3xl border border-white/10 bg-white/5 p-10 md:p-12">
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-jitcyan">
-            Built for modern teams
+            Who It's For
           </p>
           <h2 className="mt-4 text-4xl font-bold text-white md:text-5xl">
-            Built for modern independent developers and small teams.
+            For developers who own the outcome.
           </h2>
           <p className="mt-6 text-lg text-white/70">
-            Whether you're freelancing, running a small agency, or building
-            products internally - Jitwise helps you:
+            Ideal for freelancers, small agencies, and product teams who need
+            to: ship with fewer surprises, protect margins, and communicate
+            clearly with stakeholders.
           </p>
           <div className="mt-8">
             <SpotlightCards
@@ -27,22 +28,17 @@ const SocialProofSection = () => {
               items={[
                 {
                   icon: FiTrendingUp,
-                  title: "Protect margins",
+                  title: "Ship with fewer surprises",
                   color: "#34d399",
                 },
                 {
-                  icon: FiUserCheck,
-                  title: "Reduce scope creep",
-                  color: "#60a5fa",
-                },
-                {
                   icon: FiDollarSign,
-                  title: "Price with confidence",
+                  title: "Protect margins",
                   color: "#f59e0b",
                 },
                 {
                   icon: FiMessageSquare,
-                  title: "Communicate professionally",
+                  title: "Communicate clearly with stakeholders",
                   color: "#a78bfa",
                 },
               ]}

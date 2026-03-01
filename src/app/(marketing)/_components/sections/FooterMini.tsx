@@ -8,11 +8,10 @@ const FooterMini = () => {
               Jitwise
             </div>
             <p className="max-w-md text-sm text-white/60">
-              Jitwise - A scope-first estimation framework for developers.
+              Jitwise - scope-first, risk-aware
             </p>
             <p className="text-xs text-white/40">
-              Built for teams who want defensible estimates and clearer
-              client conversations.
+              software project estimation.
             </p>
           </div>
           <div className="space-y-3 text-sm text-white/60">

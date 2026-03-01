@@ -12,7 +12,7 @@ const HeroCta = () => {
       />
       <GradientButton
         href="/demo"
-        label="See it in action"
+        label="View sample output"
         variant="purple"
         rel="noopener noreferrer"
       />
