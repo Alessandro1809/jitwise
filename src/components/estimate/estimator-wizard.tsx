@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import { ClientSummaryPanel } from "@/components/estimate/client-summary-panel";
+import { ScopeAdvisorPanel } from "@/components/estimate/scope-advisor-panel";
+import { ScopeTemplatePanel } from "@/components/estimate/scope-template-panel";
 import { Button } from "@/components/ui/button";
 import type { ModuleDefinition } from "@/lib/catalog/modules";
 import { calculateEstimation } from "@/lib/engine/calculate-estimation";
@@ -68,6 +70,8 @@ export function EstimatorWizard({
   const [savedId, setSavedId] = useState<string | null>(
     estimationId ?? null
   );
+  const [templateItems, setTemplateItems] = useState<string[]>([]);
+  const [summaryMarkdown, setSummaryMarkdown] = useState<string>("");
 
   const selectionList = useMemo(
     () =>
@@ -121,6 +125,7 @@ export function EstimatorWizard({
   const canGoBack = step > 1;
   const canSave = Boolean(estimationResult) && saveState !== "saving";
   const isEditMode = Boolean(estimationId);
+  const canGenerateTemplate = Boolean(estimationInput);
 
   const handleSave = async () => {
     if (!estimationInput) {
@@ -453,13 +458,39 @@ export function EstimatorWizard({
             </div>
           </div>
           {estimationResult && estimationInput && (
-            <ClientSummaryPanel
-              summary={generateClientSummary({
-                input: estimationInput,
-                result: estimationResult,
-                modules,
-              })}
-            />
+            <>
+              <ClientSummaryPanel
+                summary={generateClientSummary({
+                  input: estimationInput,
+                  result: estimationResult,
+                  modules,
+                })}
+                estimationInput={estimationInput}
+                estimationResult={estimationResult}
+                onSummaryTextChange={setSummaryMarkdown}
+              />
+              <ScopeAdvisorPanel
+                estimationInput={estimationInput}
+                onAddToTemplate={(items) => {
+                  setTemplateItems((current) => {
+                    const next = new Set([...current, ...items]);
+                    return Array.from(next);
+                  });
+                }}
+              />
+              {canGenerateTemplate && (
+                <ScopeTemplatePanel
+                  estimationInput={estimationInput}
+                  templateItems={templateItems}
+                  summaryMarkdown={summaryMarkdown}
+                  onRemoveItem={(item) =>
+                    setTemplateItems((current) =>
+                      current.filter((entry) => entry !== item)
+                    )
+                  }
+                />
+              )}
+            </>
           )}
         </div>
       )}
@@ -469,6 +500,11 @@ export function EstimatorWizard({
           Step {step} of 3
         </div>
         <div className="flex items-center gap-3">
+          {isEditMode && estimationId && (
+            <Button asChild variant="outline">
+              <Link href={`/estimations/${estimationId}`}>Cancel</Link>
+            </Button>
+          )}
           <Button
             variant="outline"
             disabled={!canGoBack}

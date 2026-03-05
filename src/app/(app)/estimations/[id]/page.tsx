@@ -5,6 +5,7 @@ import { ClientSummaryPanel } from "@/components/estimate/client-summary-panel";
 import { ClientSummaryActions } from "@/components/estimate/client-summary-actions";
 import { DeleteEstimationButton } from "@/components/estimate/delete-estimation-button";
 import { DocumentsPanel } from "@/components/estimate/documents-panel";
+import { OutcomePanel } from "@/components/estimate/outcome-panel";
 import { MODULE_CATALOG } from "@/lib/catalog/modules";
 import type {
   EstimationInput,
@@ -19,6 +20,13 @@ type EstimationRow = {
   input: EstimationInput;
   result: EstimationResult;
   client_summary?: ClientSummary | null;
+};
+
+type OutcomeRow = {
+  actual_hours: number | null;
+  actual_cost: number | null;
+  completed_at: string | null;
+  notes: string | null;
 };
 
 const formatDate = (value: string) =>
@@ -58,6 +66,13 @@ export default async function EstimationDetailPage({
   if (error || !data) {
     notFound();
   }
+
+  const { data: outcomeData } = await supabase
+    .from("estimation_outcomes")
+    .select("actual_hours, actual_cost, completed_at, notes")
+    .eq("estimation_id", id)
+    .eq("user_id", user.id)
+    .maybeSingle();
 
   const estimation = data as EstimationRow;
   const clientSummary =
@@ -119,6 +134,17 @@ export default async function EstimationDetailPage({
         summary={clientSummary}
         subtitle="Client summary"
         title="Client-ready overview"
+        estimationInput={estimation.input}
+        estimationResult={estimation.result}
+      />
+
+      <OutcomePanel
+        estimationId={estimation.id}
+        estimationSummary={{
+          estimatedHoursProbable: estimation.result.hoursRange.probable,
+          estimatedCostProbable: estimation.result.pricingRange.probable,
+        }}
+        initialOutcome={outcomeData as OutcomeRow | null}
       />
 
       <div className="grid gap-6 lg:grid-cols-2">

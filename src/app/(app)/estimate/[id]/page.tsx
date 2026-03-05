@@ -66,6 +66,8 @@ export default async function EditEstimatePage({
         summary={clientSummary}
         subtitle="Current client summary"
         title="Latest saved summary"
+        estimationInput={estimation.input}
+        estimationResult={estimation.result}
       />
       <EstimatorWizard
         modules={MODULE_CATALOG}

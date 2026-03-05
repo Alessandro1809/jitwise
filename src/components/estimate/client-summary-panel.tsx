@@ -1,31 +1,110 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { MarkdownRenderer } from "@/components/ui/markdown";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import type { EstimationInput, EstimationResult } from "@/lib/schema/estimation";
 import type { ClientSummary } from "@/lib/summary";
 
 type ClientSummaryPanelProps = {
   summary: ClientSummary;
+  estimationInput?: EstimationInput;
+  estimationResult?: EstimationResult;
+  onSummaryTextChange?: (value: string) => void;
   title?: string;
   subtitle?: string;
 };
 
 export function ClientSummaryPanel({
   summary,
+  estimationInput,
+  estimationResult,
+  onSummaryTextChange,
   title = "Preview client version",
   subtitle = "Client summary",
 }: ClientSummaryPanelProps) {
   const [copyState, setCopyState] = useState<"idle" | "copied" | "error">(
     "idle"
   );
+  const [aiState, setAiState] = useState<"idle" | "loading" | "error">(
+    "idle"
+  );
+  const [summaryText, setSummaryText] = useState(summary.summaryText);
+  const lastRequestKeyRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    setSummaryText(summary.summaryText);
+  }, [summary.summaryText]);
+
+  useEffect(() => {
+    onSummaryTextChange?.(summaryText);
+  }, [summaryText, onSummaryTextChange]);
 
   const formatNumber = (value: number, fractionDigits = 1) =>
     new Intl.NumberFormat("en-US", {
       maximumFractionDigits: fractionDigits,
     }).format(value);
 
-  const summaryText = useMemo(() => summary.summaryText, [summary]);
+  const summaryKey = useMemo(
+    () =>
+      estimationInput && estimationResult
+        ? JSON.stringify({
+            estimationInput,
+            estimationResult,
+          })
+        : null,
+    [estimationInput, estimationResult]
+  );
+
+  useEffect(() => {
+    if (!summaryKey || !estimationInput || !estimationResult) {
+      return;
+    }
+    if (lastRequestKeyRef.current === summaryKey) {
+      return;
+    }
+    lastRequestKeyRef.current = summaryKey;
+
+    const generateSummary = async () => {
+      setAiState("loading");
+      try {
+        const supabase = createSupabaseBrowserClient();
+        const { data: sessionData } = await supabase.auth.getSession();
+        const accessToken = sessionData.session?.access_token;
+        if (!accessToken) {
+          throw new Error("Missing session token");
+        }
+
+        const response = await fetch("/api/summary", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            input: estimationInput,
+            result: estimationResult,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to generate summary.");
+        }
+
+        const payload = (await response.json()) as { content?: string };
+        if (payload.content) {
+          setSummaryText(payload.content);
+        }
+        setAiState("idle");
+      } catch (error) {
+        setAiState("error");
+      }
+    };
+
+    void generateSummary();
+  }, [summaryKey, estimationInput, estimationResult]);
 
   const handleCopy = async () => {
     try {
@@ -113,9 +192,19 @@ export function ClientSummaryPanel({
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
           Summary markdown
         </p>
-        <div className="mt-3 whitespace-pre-line text-sm leading-relaxed text-foreground">
-          {summaryText}
+        <div className="mt-3">
+          <MarkdownRenderer content={summaryText} />
         </div>
+        {aiState === "loading" && (
+          <p className="mt-2 text-xs text-muted-foreground">
+            Generating AI summary...
+          </p>
+        )}
+        {aiState === "error" && (
+          <p className="mt-2 text-xs text-destructive">
+            AI summary failed. Showing the latest saved summary.
+          </p>
+        )}
         {copyState === "error" && (
           <p className="mt-2 text-xs text-destructive">
             Could not copy summary. Try again.

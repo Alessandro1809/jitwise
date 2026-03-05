@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { calculateEstimation } from "@/lib/engine/calculate-estimation";
 import { MODULE_CATALOG } from "@/lib/catalog/modules";
+import { generateAiClientSummaryMarkdown } from "@/lib/summary/ai-client-summary";
 import { generateClientSummary } from "@/lib/summary";
 import {
   EstimationInputSchema,
@@ -47,11 +48,25 @@ export async function POST(request: Request) {
 
   const estimationInput = parsedInput.data;
   const estimationResult = calculateEstimation(estimationInput);
-  const clientSummary = generateClientSummary({
+  const clientSummaryBase = generateClientSummary({
     input: estimationInput,
     result: estimationResult,
     modules: MODULE_CATALOG,
   });
+  let clientSummary = clientSummaryBase;
+
+  try {
+    const aiSummary = await generateAiClientSummaryMarkdown({
+      input: estimationInput,
+      result: estimationResult,
+      modules: MODULE_CATALOG,
+    });
+    if (aiSummary.length > 0) {
+      clientSummary = { ...clientSummaryBase, summaryText: aiSummary };
+    }
+  } catch (error) {
+    // fall back to deterministic summary
+  }
 
   const { supabase, user } = auth;
   const { data, error } = await supabase

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
@@ -48,8 +48,21 @@ export function DocumentsPanel({ estimationId }: DocumentsPanelProps) {
   const [title, setTitle] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isDragActive, setIsDragActive] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const canUpload = title.trim().length > 0 && Boolean(file) && !isUploading;
+  const canUpload = Boolean(file) && !isUploading;
+
+  const getResolvedTitle = () => {
+    const trimmed = title.trim();
+    if (trimmed.length > 0) {
+      return trimmed;
+    }
+    if (file) {
+      return file.name.replace(/\.[^/.]+$/, "");
+    }
+    return "";
+  };
 
   const sortedDocuments = useMemo(
     () =>
@@ -113,8 +126,13 @@ export function DocumentsPanel({ estimationId }: DocumentsPanelProps) {
         throw new Error("Missing session token");
       }
 
+      const resolvedTitle = getResolvedTitle();
+      if (resolvedTitle.length === 0) {
+        throw new Error("Missing title");
+      }
+
       const formData = new FormData();
-      formData.append("title", title.trim());
+      formData.append("title", resolvedTitle);
       formData.append("estimationId", estimationId);
       formData.append("file", file);
 
@@ -134,11 +152,32 @@ export function DocumentsPanel({ estimationId }: DocumentsPanelProps) {
       setDocuments((current) => [payload.data, ...current]);
       setTitle("");
       setFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     } catch (err) {
       setError("Upload failed. Check your file and try again.");
     } finally {
       setIsUploading(false);
     }
+  };
+
+  const handleFileSelect = (nextFile: File | null) => {
+    setFile(nextFile);
+    if (nextFile && title.trim().length === 0) {
+      setTitle(nextFile.name.replace(/\.[^/.]+$/, ""));
+    }
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragActive(false);
+    const droppedFile = event.dataTransfer.files?.[0] ?? null;
+    handleFileSelect(droppedFile);
+  };
+
+  const handleBrowseClick = () => {
+    fileInputRef.current?.click();
   };
 
   const handleDownload = async (documentId: string) => {
@@ -223,11 +262,50 @@ export function DocumentsPanel({ estimationId }: DocumentsPanelProps) {
               value={title}
               onChange={(event) => setTitle(event.target.value)}
             />
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={handleBrowseClick}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  handleBrowseClick();
+                }
+              }}
+              onDragOver={(event) => {
+                event.preventDefault();
+                setIsDragActive(true);
+              }}
+              onDragLeave={() => setIsDragActive(false)}
+              onDrop={handleDrop}
+              className={[
+                "flex flex-col items-center justify-center gap-2 rounded-md border border-dashed px-4 py-6 text-sm transition-colors",
+                isDragActive
+                  ? "border-foreground bg-muted/50 text-foreground"
+                  : "border-border text-muted-foreground hover:border-foreground/60 hover:text-foreground",
+              ].join(" ")}
+              aria-label="Upload document by dropping a file or browsing"
+            >
+              <div className="font-semibold text-foreground">
+                Drag and drop a file
+              </div>
+              <div className="text-xs text-muted-foreground">
+                or click to browse your computer
+              </div>
+              {file && (
+                <div className="text-xs text-foreground">
+                  Selected: {file.name}
+                </div>
+              )}
+            </div>
             <input
               type="file"
-              className="text-sm"
+              className="hidden"
+              ref={fileInputRef}
               onChange={(event) =>
-                setFile(event.target.files ? event.target.files[0] : null)
+                handleFileSelect(
+                  event.target.files ? event.target.files[0] : null
+                )
               }
             />
             <Button
