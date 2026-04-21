@@ -22,7 +22,10 @@
       "Bash(ls -la /Users/alessandro_diaz/Documents/Development/Personal/jitwise/jitwise/src/app/\\\\\\(marketing\\\\\\)/)",
       "Bash(pnpm --version)",
       "Bash(grep -n 'id=' \"C:/Users/aless/OneDrive/Attachments/Documents/Development/personal/jitwise-main/src/app/\\(marketing\\)/_components/sections/PainSection.tsx\" | head -5\ngrep -n 'id=' \"C:/Users/aless/OneDrive/Attachments/Documents/Development/personal/jitwise-main/src/app/\\(marketing\\)/_components/sections/HowItWorksSection.tsx\" | head -5\ngrep -n 'id=' \"C:/Users/aless/OneDrive/Attachments/Documents/Development/personal/jitwise-main/src/app/\\(marketing\\)/_components/sections/SocialProofSection.tsx\" | head -5\ngrep -n 'id=' \"C:/Users/aless/OneDrive/Attachments/Documents/Development/personal/jitwise-main/src/app/\\(marketing\\)/_components/sections/PricingSection.tsx\" | head -5\ngrep -n 'id=' \"C:/Users/aless/OneDrive/Attachments/Documents/Development/personal/jitwise-main/src/app/\\(marketing\\)/_components/sections/FinalCtaSection.tsx\" | head -5)",
-      "Bash(du -sh /Users/alessandro_diaz/Documents/Development/Personal/jitwise/jitwise/.*)"
+      "Bash(du -sh /Users/alessandro_diaz/Documents/Development/Personal/jitwise/jitwise/.*)",
+      "Bash(node:*)",
+      "Bash(grep -r \"NEXT_LOCALE\\\\|localeCookie\\\\|cookieName\" /Users/alessandro_diaz/Documents/Development/Personal/jitwise/jitwise/node_modules/next-intl/dist/ --include=*.cjs -l)",
+      "Bash(grep -r \"NEXT_LOCALE\\\\|localeCookie\" /Users/alessandro_diaz/Documents/Development/Personal/jitwise/jitwise/node_modules/next-intl/dist/esm/ --include=*.js -l)"
     ]
   }
 }

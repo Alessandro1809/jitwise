@@ -4,18 +4,22 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
+import { useTranslations } from "next-intl";
+import { LanguageToggle } from "./LanguageToggle";
 
 export const NavBar = () => {
+  const t = useTranslations("nav");
+
   const sections = useMemo(
     () => [
-      { id: "hero", label: "Home" },
-      { id: "pain", label: "The Problem" },
-      { id: "how-it-works", label: "How it works" },
-      { id: "example-output", label: "Demo" },
-      { id: "social-proof", label: "Teams" },
-      { id: "pricing", label: "Pricing" },
+      { id: "hero", label: t("home") },
+      { id: "pain", label: t("problem") },
+      { id: "how-it-works", label: t("howItWorks") },
+      { id: "example-output", label: t("demo") },
+      { id: "social-proof", label: t("teams") },
+      { id: "pricing", label: t("pricing") },
     ],
-    []
+    [t]
   );
   const [activeId, setActiveId] = useState<string>("hero");
   const [isOpen, setIsOpen] = useState(false);
@@ -96,23 +100,24 @@ export const NavBar = () => {
           </div>
 
           <div className="hidden items-center gap-3 md:flex">
+            <LanguageToggle />
             <Link
               href="/pricing"
               className="rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/60 transition hover:text-white"
             >
-              Pricing
+              {t("pricing")}
             </Link>
             <Link
               href="/login"
               className="rounded-full border border-white/20 bg-white/5 px-4 py-2 text-xs font-semibold text-white transition hover:bg-white/10"
             >
-              Sign in
+              {t("signIn")}
             </Link>
             <Link
               href="/login"
               className="rounded-full bg-jitcyan px-4 py-2 text-xs font-semibold text-black transition hover:bg-jitcyan/90"
             >
-              Start free →
+              {t("startFree")}
             </Link>
           </div>
 
@@ -151,24 +156,27 @@ export const NavBar = () => {
             </div>
 
             <div className="mt-5 flex flex-col gap-2">
+              <div className="flex justify-center">
+                <LanguageToggle />
+              </div>
               <Link
                 href="/pricing"
                 onClick={() => setIsOpen(false)}
                 className="flex items-center justify-between rounded-2xl border border-white/10 px-4 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-white/70 transition hover:text-white"
               >
-                Pricing
+                {t("pricing")}
               </Link>
               <Link
                 href="/login"
                 onClick={() => setIsOpen(false)}
                 className="flex items-center justify-center rounded-2xl border border-jitcyan/50 bg-jitcyan/10 px-4 py-3 text-sm font-semibold text-jitcyan transition hover:bg-jitcyan/20"
               >
-                Start free →
+                {t("startFree")}
               </Link>
             </div>
           </div>
         </div>
       </nav>
     </>
-  )
-}
+  );
+};

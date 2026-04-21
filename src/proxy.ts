@@ -4,6 +4,25 @@ import type { NextRequest } from "next/server";
 
 import { env } from "@/lib/config/env";
 
+const LOCALES = ["en", "es"] as const;
+type Locale = (typeof LOCALES)[number];
+const DEFAULT_LOCALE: Locale = "en";
+
+function detectLocale(request: NextRequest): Locale {
+  // 1. Cookie takes priority (set by LanguageToggle)
+  const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
+  if (cookieLocale && LOCALES.includes(cookieLocale as Locale)) {
+    return cookieLocale as Locale;
+  }
+  // 2. Accept-Language header fallback
+  const acceptLang = request.headers.get("Accept-Language");
+  if (acceptLang) {
+    const preferred = acceptLang.split(",")[0].split("-")[0].toLowerCase();
+    if (LOCALES.includes(preferred as Locale)) return preferred as Locale;
+  }
+  return DEFAULT_LOCALE;
+}
+
 const isProtectedRoute = (pathname: string) =>
   pathname === "/dashboard" ||
   pathname.startsWith("/dashboard/") ||
@@ -17,9 +36,12 @@ const isProtectedRoute = (pathname: string) =>
   pathname === "/settings" ||
   pathname.startsWith("/settings/");
 
-export async function middleware(request: NextRequest) {
-  // Forward the pathname so server components (layouts) can read it
+export async function proxy(request: NextRequest) {
+  const locale = detectLocale(request);
+
+  // Forward locale and pathname to server components via request headers
   const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("X-NEXT-INTL-LOCALE", locale);
   requestHeaders.set("x-pathname", request.nextUrl.pathname);
 
   const response = NextResponse.next({
@@ -30,6 +52,7 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
+  // Verify Supabase session for protected routes
   const supabase = createServerClient(env.supabaseUrl, env.supabaseAnonKey, {
     cookies: {
       getAll() {
@@ -57,12 +80,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/estimate/:path*",
-    "/estimations/:path*",
-    "/onboarding",
-    "/insights/:path*",
-    "/settings/:path*",
-  ],
+  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
 };
