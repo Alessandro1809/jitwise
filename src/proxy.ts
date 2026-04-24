@@ -9,12 +9,10 @@ type Locale = (typeof LOCALES)[number];
 const DEFAULT_LOCALE: Locale = "en";
 
 function detectLocale(request: NextRequest): Locale {
-  // 1. Cookie takes priority (set by LanguageToggle)
   const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
   if (cookieLocale && LOCALES.includes(cookieLocale as Locale)) {
     return cookieLocale as Locale;
   }
-  // 2. Accept-Language header fallback
   const acceptLang = request.headers.get("Accept-Language");
   if (acceptLang) {
     const preferred = acceptLang.split(",")[0].split("-")[0].toLowerCase();
@@ -36,32 +34,38 @@ const isProtectedRoute = (pathname: string) =>
   pathname === "/settings" ||
   pathname.startsWith("/settings/");
 
+// Only gate the estimate creation page — everything else (estimations list,
+// insights, settings, referrals, plan) should be accessible at any time.
+const isOnboardingGated = (pathname: string) =>
+  pathname === "/estimate" || pathname.startsWith("/estimate/");
+
 export async function proxy(request: NextRequest) {
   const locale = detectLocale(request);
+  const pathname = request.nextUrl.pathname;
 
-  // Forward locale and pathname to server components via request headers
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("X-NEXT-INTL-LOCALE", locale);
-  requestHeaders.set("x-pathname", request.nextUrl.pathname);
+  requestHeaders.set("x-pathname", pathname);
 
-  const response = NextResponse.next({
+  let response = NextResponse.next({
     request: { headers: requestHeaders },
   });
 
-  if (!isProtectedRoute(request.nextUrl.pathname)) {
-    return response;
-  }
-
-  // Verify Supabase session for protected routes
   const supabase = createServerClient(env.supabaseUrl, env.supabaseAnonKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll();
       },
       setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value, options }) => {
-          response.cookies.set(name, value, options);
+        cookiesToSet.forEach(({ name, value }) =>
+          request.cookies.set(name, value)
+        );
+        response = NextResponse.next({
+          request: { headers: requestHeaders },
         });
+        cookiesToSet.forEach(({ name, value, options }) =>
+          response.cookies.set(name, value, options)
+        );
       },
     },
   });
@@ -70,13 +74,39 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (user) {
-    return response;
+  if (isProtectedRoute(pathname) && !user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    return NextResponse.redirect(url);
   }
 
-  const url = request.nextUrl.clone();
-  url.pathname = "/login";
-  return NextResponse.redirect(url);
+  // Onboarding gate: redirect new users before they reach any app route.
+  // Runs only for routes where onboarding is required (not /onboarding itself).
+  // The proxy is the right place for this check because it has reliable access
+  // to the exact pathname — layouts cannot safely detect their own route via
+  // forwarded headers in Next.js 16 proxy files.
+  if (user && isOnboardingGated(pathname)) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("onboarding_completed")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile?.onboarding_completed) {
+      const { count } = await supabase
+        .from("estimations")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user.id);
+
+      if ((count ?? 0) === 0) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/onboarding";
+        return NextResponse.redirect(url);
+      }
+    }
+  }
+
+  return response;
 }
 
 export const config = {
