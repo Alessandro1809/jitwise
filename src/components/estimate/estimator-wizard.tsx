@@ -981,20 +981,21 @@ export function EstimatorWizard({
         </div>
       )}
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-5">
+      <div className="flex flex-col gap-4 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
           <span className="text-[#00ACFF]">{step}</span>
           <span>/</span>
           <span>3</span>
           <span className="ml-1 hidden sm:inline">&mdash; {STEP_LABELS[step]}</span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:gap-3">
           {isEditMode && estimationId && (
-            <Button asChild variant="outline">
+            <Button asChild variant="outline" className="w-full sm:w-auto h-12">
               <Link href={`/estimations/${estimationId}`}>Cancel</Link>
             </Button>
           )}
           <Button
+            className="w-full sm:w-auto h-12"
             aria-label="Go back to previous step"
             variant="outline"
             disabled={!canGoBack}
@@ -1004,6 +1005,7 @@ export function EstimatorWizard({
           </Button>
           {step < 3 ? (
             <Button
+              className="w-full sm:w-auto h-12"
               aria-label="Continue to next step"
               disabled={!canAdvance}
               onClick={() => setStep((current) => (current + 1) as Step)}
@@ -1012,6 +1014,7 @@ export function EstimatorWizard({
             </Button>
           ) : (
             <Button
+              className="w-full sm:w-auto h-12"
               aria-label="Restart wizard from step 1"
               onClick={() => setStep(1)}
             >
