@@ -532,9 +532,15 @@ export function EstimatorWizard({
                 </div>
               );
             })}
-              </div>
             </div>
-          ))}
+          </div>
+        ))}
+        {/* Mostrar mensaje de validación si no se selecciona ningún módulo */}
+        {step === 1 && Object.keys(selectedModules).length === 0 && (
+          <p className="mt-4 text-sm text-red-600">
+            Por favor selecciona al menos un módulo antes de continuar.
+          </p>
+        )}
         </div>
       )}
 
