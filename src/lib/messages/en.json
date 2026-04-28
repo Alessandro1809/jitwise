@@ -1,0 +1,214 @@
+{
+  "nav": {
+    "home": "Home",
+    "problem": "The Problem",
+    "howItWorks": "How it works",
+    "demo": "Demo",
+    "teams": "Teams",
+    "pricing": "Pricing",
+    "signIn": "Sign in",
+    "startFree": "Start free →"
+  },
+  "hero": {
+    "title": "Turn a client call into a professional project estimate in",
+    "accent": "3 minutes",
+    "titleContinuation": ".",
+    "subtitle": "Select your modules, set your rate, and get a client-ready brief with AI-powered scope analysis. No more spreadsheets, no more guesswork."
+  },
+  "heroCta": {
+    "startFree": "Start estimating free →",
+    "seeExample": "See a live example"
+  },
+  "pain": {
+    "label": "The Problem",
+    "title": "Sound familiar?",
+    "subtitle": "Every freelancer runs into these walls. The problem isn't effort — it's the lack of structure.",
+    "points": [
+      {
+        "title": "You write a proposal in Google Docs for 2 hours.",
+        "body": "The client asks for a discount. You guess a new number. You never know if it was fair."
+      },
+      {
+        "title": "You underestimate a module.",
+        "body": "The project runs 40% over. You eat the cost. The client is confused — the estimate looked solid."
+      },
+      {
+        "title": "You can't remember why last month's project cost more.",
+        "body": "No history. No pattern. Every estimate starts from zero with the same guesswork."
+      }
+    ]
+  },
+  "howItWorks": {
+    "label": "How It Works",
+    "title": "From idea to defensible estimate.",
+    "items": [
+      {
+        "title": "Define Scope",
+        "description": "Break down features, complexity levels, and project modules. No vague descriptions. Every decision adds measurable weight."
+      },
+      {
+        "title": "Apply Risk & Constraints",
+        "description": "Account for uncertainty, timeline pressure, and architectural complexity. Jitwise doesn't ignore risk — it models it."
+      },
+      {
+        "title": "Generate Structured Output",
+        "description": "Effort range (min / probable / max), pricing range, a structured client summary. Not just numbers — reasoning."
+      }
+    ]
+  },
+  "features": {
+    "label": "Features",
+    "title": "Built for developers who take estimation seriously.",
+    "items": [
+      {
+        "title": "Scope-Based Engine",
+        "description": "Every module carries weighted complexity. No more flat \"feature = 10 hours\" thinking."
+      },
+      {
+        "title": "Risk-Aware Modeling",
+        "description": "Deadlines, uncertainty, and external dependencies affect output — as they should."
+      },
+      {
+        "title": "Defendable Client Summary",
+        "description": "Automatically generate structured explanations you can send to clients. Because transparency builds trust."
+      },
+      {
+        "title": "Engineering-First Approach",
+        "description": "No buzzwords. No AI magic pricing. Just structured logic and clarity."
+      }
+    ]
+  },
+  "insight": {
+    "label": "The Insight",
+    "title": "Estimation is not a number. It's a system.",
+    "subtitle": "A reliable estimate is the result of:",
+    "items": [
+      { "title": "Clear scope boundaries" },
+      { "title": "Explicit complexity levels" },
+      { "title": "Risk weighting" },
+      { "title": "Logical breakdown of features" }
+    ],
+    "footer": "Jitwise gives you a structured framework to turn project ambiguity into measurable effort."
+  },
+  "demo": {
+    "label": "Demo",
+    "title": "What your estimate looks like.",
+    "subtitle": "Not just a number — a fully structured, explainable breakdown your client can trust.",
+    "windowLabel": "SaaS Platform · 50pts · Medium risk · Expedite",
+    "sampleBadge": "Sample",
+    "tabs": {
+      "overview": "Overview",
+      "scope": "Scope",
+      "brief": "Client Brief"
+    },
+    "overview": {
+      "cards": {
+        "effort": { "label": "Probable effort", "sub": "{min}h – {max}h" },
+        "cost": { "label": "Probable cost", "sub": "at $100/hr" },
+        "risk": { "label": "Risk weight", "sub": "Medium risk" },
+        "scope": { "label": "Scope points", "sub": "5 modules" }
+      },
+      "table": {
+        "module": "Module",
+        "points": "Points",
+        "pct": "%",
+        "probHrs": "Probable hrs",
+        "range": "Range"
+      }
+    },
+    "scope": {
+      "scopePoints": "scope points",
+      "ofTotal": "of total",
+      "basePoints": "Base points",
+      "riskUrgency": "Risk × Urgency",
+      "multipliedHrs": "Multiplied hrs",
+      "probableValue": "202h probable"
+    },
+    "modules": {
+      "authentication": "Authentication",
+      "dashboardAnalytics": "Dashboard & Analytics",
+      "billing": "Billing & Subscriptions",
+      "apiIntegration": "API Integration",
+      "notifications": "Notifications"
+    },
+    "complexity": {
+      "Low": "Low",
+      "Medium": "Medium",
+      "High": "High"
+    },
+    "summaryText": "## Project Summary\n\nThis estimate covers the development of a SaaS platform with a focus on reliability and delivery within an 8-week timeline.\n\n### Scope\nThe project includes Authentication, Dashboard & Analytics, Billing & Subscriptions, API Integration, and Notifications — 50 scope points in total.\n\n### Timeline & Risk\nWith a **medium risk weight (1.35×)** and an **expedite urgency (1.2×)**, the probable effort is **~202 hours**, equivalent to **$20,200** at the agreed rate.\n\n> The range of 143–273 hours reflects realistic variance for a system of this complexity. Recommend weekly milestone reviews to stay within the probable band."
+  },
+  "socialProof": {
+    "label": "What freelancers say",
+    "title": "Built for people who deliver.",
+    "testimonials": [
+      {
+        "quote": "I used to spend half a day putting together a proposal. Now I send something structured in 15 minutes — and clients actually read it.",
+        "name": "Alex R.",
+        "role": "Freelance full-stack developer"
+      },
+      {
+        "quote": "The risk multiplier alone changed how I price projects. I stopped undercharging for tight deadlines.",
+        "name": "Marina C.",
+        "role": "Independent software consultant"
+      },
+      {
+        "quote": "Finally something that speaks engineering, not project management theater. The module breakdown matches how I actually think about scope.",
+        "name": "David T.",
+        "role": "Freelance backend engineer"
+      }
+    ]
+  },
+  "pricing": {
+    "label": "Pricing",
+    "title": "Free to start. Pro when you scale.",
+    "free": {
+      "tier": "Free",
+      "price": "$0",
+      "period": "forever",
+      "cta": "Start free →",
+      "features": [
+        "3 saved estimates",
+        "Full wizard with all modules",
+        "AI client summary",
+        "Risk & urgency modeling"
+      ]
+    },
+    "pro": {
+      "tier": "Pro",
+      "price": "$12",
+      "priceSuffix": "/mo",
+      "period": "all features unlocked",
+      "cta": "See all features & upgrade →",
+      "features": [
+        "Unlimited estimates",
+        "Shareable public links",
+        "PDF export",
+        "Calibration hints from history",
+        "AI advisor (scope review)",
+        "Compare mode"
+      ]
+    }
+  },
+  "finalCta": {
+    "label": "Ready to estimate smarter?",
+    "title": "Create your first estimate free.",
+    "subtitle": "No credit card required. 3 estimates free forever.",
+    "cta": "Create your first estimate free →"
+  },
+  "footer": {
+    "tagline": "Jitwise - A scope-first estimation framework for developers.",
+    "smallPrint": "Built for teams who want defensible estimates and clearer client conversations.",
+    "product": "Product",
+    "howItWorks": "How it works",
+    "demo": "Demo",
+    "pricing": "Pricing",
+    "getStarted": "Get started",
+    "tryJitwise": "Try Jitwise",
+    "contact": "Contact",
+    "copyright": "© 2026 Jitwise. All rights reserved.",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "github": "GitHub"
+  }
+}

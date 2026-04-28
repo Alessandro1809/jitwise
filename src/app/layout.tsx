@@ -4,6 +4,8 @@ import "./globals.css";
 
 import { Toaster } from "sileo";
 import { ToastProvider } from "@/components/ui/toast";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,20 +22,25 @@ export const metadata: Metadata = {
   description: "Jitwise is a tool that helps software teams estimate their projects by focusing on the scope of work. It provides a simple and intuitive interface for creating and managing project scopes, allowing teams to make informed decisions about their projects and deliver high-quality software on time.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ToastProvider>
-          {children}
-          <Toaster position="bottom-right" />
-        </ToastProvider>
+        <NextIntlClientProvider messages={messages}>
+          <ToastProvider>
+            {children}
+            <Toaster position="bottom-right" />
+          </ToastProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

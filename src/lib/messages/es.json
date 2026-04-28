@@ -1,0 +1,214 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "problem": "El Problema",
+    "howItWorks": "Cómo funciona",
+    "demo": "Demo",
+    "teams": "Equipos",
+    "pricing": "Precios",
+    "signIn": "Iniciar sesión",
+    "startFree": "Empieza gratis →"
+  },
+  "hero": {
+    "title": "Convierte una llamada con un cliente en una estimación profesional en",
+    "accent": "3 minutos",
+    "titleContinuation": ".",
+    "subtitle": "Selecciona tus módulos, define tu tarifa y obtén un brief listo para el cliente con análisis de alcance impulsado por IA. Sin hojas de cálculo, sin suposiciones."
+  },
+  "heroCta": {
+    "startFree": "Empieza a estimar gratis →",
+    "seeExample": "Ver un ejemplo en vivo"
+  },
+  "pain": {
+    "label": "El Problema",
+    "title": "¿Te suena familiar?",
+    "subtitle": "Todo freelancer choca con estos muros. El problema no es el esfuerzo — es la falta de estructura.",
+    "points": [
+      {
+        "title": "Escribes una propuesta en Google Docs durante 2 horas.",
+        "body": "El cliente pide un descuento. Inventas un nuevo número. Nunca sabes si fue justo."
+      },
+      {
+        "title": "Subestimas un módulo.",
+        "body": "El proyecto se pasa un 40%. Asumes el costo. El cliente está confundido — la estimación parecía sólida."
+      },
+      {
+        "title": "No recuerdas por qué el proyecto del mes pasado costó más.",
+        "body": "Sin historial. Sin patrones. Cada estimación empieza de cero con las mismas suposiciones."
+      }
+    ]
+  },
+  "howItWorks": {
+    "label": "Cómo Funciona",
+    "title": "De la idea a una estimación defendible.",
+    "items": [
+      {
+        "title": "Define el Alcance",
+        "description": "Divide funcionalidades, niveles de complejidad y módulos del proyecto. Sin descripciones vagas. Cada decisión agrega peso medible."
+      },
+      {
+        "title": "Aplica Riesgos y Restricciones",
+        "description": "Considera la incertidumbre, la presión del cronograma y la complejidad arquitectónica. Jitwise no ignora el riesgo — lo modela."
+      },
+      {
+        "title": "Genera una Salida Estructurada",
+        "description": "Rango de esfuerzo (mín / probable / máx), rango de precios, un resumen estructurado para el cliente. No solo números — razonamiento."
+      }
+    ]
+  },
+  "features": {
+    "label": "Funcionalidades",
+    "title": "Construido para desarrolladores que se toman en serio la estimación.",
+    "items": [
+      {
+        "title": "Motor Basado en Alcance",
+        "description": "Cada módulo lleva complejidad ponderada. Adiós al pensamiento plano de \"funcionalidad = 10 horas\"."
+      },
+      {
+        "title": "Modelado Consciente del Riesgo",
+        "description": "Los plazos, la incertidumbre y las dependencias externas afectan el resultado — como debe ser."
+      },
+      {
+        "title": "Resumen Defendible para el Cliente",
+        "description": "Genera automáticamente explicaciones estructuradas para enviar a clientes. Porque la transparencia genera confianza."
+      },
+      {
+        "title": "Enfoque de Ingeniería Primero",
+        "description": "Sin palabras de moda. Sin precios mágicos de IA. Solo lógica estructurada y claridad."
+      }
+    ]
+  },
+  "insight": {
+    "label": "La Perspectiva",
+    "title": "Una estimación no es un número. Es un sistema.",
+    "subtitle": "Una estimación confiable es el resultado de:",
+    "items": [
+      { "title": "Límites de alcance claros" },
+      { "title": "Niveles de complejidad explícitos" },
+      { "title": "Ponderación de riesgos" },
+      { "title": "Desglose lógico de funcionalidades" }
+    ],
+    "footer": "Jitwise te da un marco estructurado para convertir la ambigüedad del proyecto en esfuerzo medible."
+  },
+  "demo": {
+    "label": "Demo",
+    "title": "Así se ve tu estimación.",
+    "subtitle": "No solo un número — un desglose completamente estructurado y explicable en el que tu cliente puede confiar.",
+    "windowLabel": "Plataforma SaaS · 50pts · Riesgo medio · Urgente",
+    "sampleBadge": "Muestra",
+    "tabs": {
+      "overview": "Resumen",
+      "scope": "Alcance",
+      "brief": "Brief del Cliente"
+    },
+    "overview": {
+      "cards": {
+        "effort": { "label": "Esfuerzo probable", "sub": "{min}h – {max}h" },
+        "cost": { "label": "Costo probable", "sub": "a $100/hr" },
+        "risk": { "label": "Peso de riesgo", "sub": "Riesgo medio" },
+        "scope": { "label": "Puntos de alcance", "sub": "5 módulos" }
+      },
+      "table": {
+        "module": "Módulo",
+        "points": "Puntos",
+        "pct": "%",
+        "probHrs": "Hrs probables",
+        "range": "Rango"
+      }
+    },
+    "scope": {
+      "scopePoints": "puntos de alcance",
+      "ofTotal": "del total",
+      "basePoints": "Puntos base",
+      "riskUrgency": "Riesgo × Urgencia",
+      "multipliedHrs": "Hrs multiplicadas",
+      "probableValue": "202h probable"
+    },
+    "modules": {
+      "authentication": "Autenticación",
+      "dashboardAnalytics": "Panel & Analíticas",
+      "billing": "Facturación & Suscripciones",
+      "apiIntegration": "Integración de API",
+      "notifications": "Notificaciones"
+    },
+    "complexity": {
+      "Low": "Bajo",
+      "Medium": "Medio",
+      "High": "Alto"
+    },
+    "summaryText": "## Resumen del Proyecto\n\nEsta estimación cubre el desarrollo de una plataforma SaaS con enfoque en confiabilidad y entrega en un plazo de 8 semanas.\n\n### Alcance\nEl proyecto incluye Autenticación, Panel & Analíticas, Facturación & Suscripciones, Integración de API y Notificaciones — 50 puntos de alcance en total.\n\n### Cronograma & Riesgo\nCon un **peso de riesgo medio (1.35×)** y una **urgencia acelerada (1.2×)**, el esfuerzo probable es **~202 horas**, equivalente a **$20,200** a la tarifa acordada.\n\n> El rango de 143–273 horas refleja la varianza realista para un sistema de esta complejidad. Se recomienda revisiones semanales de hitos para mantenerse dentro de la banda probable."
+  },
+  "socialProof": {
+    "label": "Lo que dicen los freelancers",
+    "title": "Creado para quienes cumplen.",
+    "testimonials": [
+      {
+        "quote": "Antes pasaba medio día armando una propuesta. Ahora envío algo estructurado en 15 minutos — y los clientes realmente lo leen.",
+        "name": "Alex R.",
+        "role": "Desarrollador full-stack freelance"
+      },
+      {
+        "quote": "Solo el multiplicador de riesgo cambió cómo cotizo proyectos. Dejé de cobrar de menos por plazos ajustados.",
+        "name": "Marina C.",
+        "role": "Consultora de software independiente"
+      },
+      {
+        "quote": "Por fin algo que habla de ingeniería, no de teatro de gestión de proyectos. El desglose por módulos coincide con cómo realmente pienso el alcance.",
+        "name": "David T.",
+        "role": "Ingeniero backend freelance"
+      }
+    ]
+  },
+  "pricing": {
+    "label": "Precios",
+    "title": "Gratis para empezar. Pro cuando escales.",
+    "free": {
+      "tier": "Gratis",
+      "price": "$0",
+      "period": "siempre",
+      "cta": "Empieza gratis →",
+      "features": [
+        "3 estimaciones guardadas",
+        "Asistente completo con todos los módulos",
+        "Resumen de cliente con IA",
+        "Modelado de riesgo y urgencia"
+      ]
+    },
+    "pro": {
+      "tier": "Pro",
+      "price": "$12",
+      "priceSuffix": "/mes",
+      "period": "todas las funciones desbloqueadas",
+      "cta": "Ver todas las funciones y mejorar →",
+      "features": [
+        "Estimaciones ilimitadas",
+        "Links públicos compartibles",
+        "Exportación a PDF",
+        "Sugerencias de calibración desde el historial",
+        "Asesor IA (revisión de alcance)",
+        "Modo comparación"
+      ]
+    }
+  },
+  "finalCta": {
+    "label": "¿Listo para estimar con más inteligencia?",
+    "title": "Crea tu primera estimación gratis.",
+    "subtitle": "Sin tarjeta de crédito. 3 estimaciones gratis para siempre.",
+    "cta": "Crea tu primera estimación gratis →"
+  },
+  "footer": {
+    "tagline": "Jitwise - Un framework de estimación basado en alcance para desarrolladores.",
+    "smallPrint": "Construido para equipos que quieren estimaciones defendibles y conversaciones más claras con sus clientes.",
+    "product": "Producto",
+    "howItWorks": "Cómo funciona",
+    "demo": "Demo",
+    "pricing": "Precios",
+    "getStarted": "Comenzar",
+    "tryJitwise": "Probar Jitwise",
+    "contact": "Contacto",
+    "copyright": "© 2026 Jitwise. Todos los derechos reservados.",
+    "privacy": "Privacidad",
+    "terms": "Términos",
+    "github": "GitHub"
+  }
+}

@@ -19,7 +19,6 @@ export default function OnboardingPage() {
   const [hourlyRate, setHourlyRate] = useState("75");
   const [submitting, setSubmitting] = useState(false);
 
-  // Slide direction: step 1 exits left, step 2 enters right
   const handleNext = () => setStep(2);
 
   const handleSubmit = async () => {
@@ -36,6 +35,7 @@ export default function OnboardingPage() {
           .from("profiles")
           .update({
             onboarding_project_type: projectType,
+            onboarding_completed: true,
           })
           .eq("id", userId);
       }
@@ -51,12 +51,10 @@ export default function OnboardingPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-6 py-16">
       <div className="w-full max-w-[560px]">
-        {/* Logo */}
         <p className="mb-10 text-center text-sm font-bold tracking-tight text-foreground">
           Jitwise
         </p>
 
-        {/* Progress dots */}
         <div className="mb-8 flex justify-center gap-2">
           {([1, 2] as const).map((s) => (
             <div
@@ -68,7 +66,6 @@ export default function OnboardingPage() {
           ))}
         </div>
 
-        {/* Header */}
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-semibold leading-tight text-foreground">
             {step === 1
@@ -82,7 +79,6 @@ export default function OnboardingPage() {
           </p>
         </div>
 
-        {/* Step 1 — Project type */}
         <div
           className={`transition-all duration-250 ${
             step === 1 ? "block" : "hidden"
@@ -117,7 +113,6 @@ export default function OnboardingPage() {
           </button>
         </div>
 
-        {/* Step 2 — Hourly rate */}
         <div
           className={`transition-all duration-250 ${
             step === 2 ? "block" : "hidden"
