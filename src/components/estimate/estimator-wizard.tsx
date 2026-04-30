@@ -990,7 +990,7 @@ export function EstimatorWizard({
         </div>
         <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:gap-3">
           {isEditMode && estimationId && (
-            <Button asChild variant="outline" className="w-full sm:w-auto h-12">
+            <Button asChild variant="default" className="w-full sm:w-auto h-12 bg-blue-500 text-white hover:bg-blue-600">
               <Link href={`/estimations/${estimationId}`}>Cancel</Link>
             </Button>
           )}
@@ -1005,7 +1005,7 @@ export function EstimatorWizard({
           </Button>
           {step < 3 ? (
             <Button
-              className="w-full sm:w-auto h-12"
+              className="w-full sm:w-auto h-12 bg-blue-500 text-white hover:bg-blue-600"
               aria-label="Continue to next step"
               disabled={!canAdvance}
               onClick={() => setStep((current) => (current + 1) as Step)}
@@ -1014,7 +1014,7 @@ export function EstimatorWizard({
             </Button>
           ) : (
             <Button
-              className="w-full sm:w-auto h-12"
+              className="w-full sm:w-auto h-12 bg-blue-500 text-white hover:bg-blue-600"
               aria-label="Restart wizard from step 1"
               onClick={() => setStep(1)}
             >
