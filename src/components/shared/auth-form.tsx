@@ -76,6 +76,23 @@ export function AuthForm({ referralToken }: { referralToken?: string }) {
       setMessage(error.message);
       return;
     }
+    // After successful login, claim any pending referral token
+    if (typeof window !== 'undefined') {
+      const pending = sessionStorage.getItem('pending_ref_token');
+      if (pending) {
+        try {
+          await fetch('/api/referrals/claim', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refToken: pending }),
+            credentials: 'include',
+          });
+        } catch {
+          // ignore errors
+        }
+        sessionStorage.removeItem('pending_ref_token');
+      }
+    }
 
     // Check if this user has any saved estimations to pick the right landing
     const { count } = await supabase
