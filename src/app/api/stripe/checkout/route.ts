@@ -30,10 +30,10 @@ export async function POST(request: Request) {
     ?.stripe_customer_id ?? null;
 
   if (!customerId) {
-    const customer = await stripe.customers.create({
-      email: user.email,
-      metadata: { supabase_user_id: user.id },
-    });
+    const customer = await stripe.customers.create(
+      { email: user.email, metadata: { supabase_user_id: user.id } },
+      { idempotencyKey: `customer-create-${user.id}` }
+    );
     customerId = customer.id;
 
     await supabase
@@ -44,16 +44,22 @@ export async function POST(request: Request) {
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
-  const session = await stripe.checkout.sessions.create({
-    customer: customerId,
-    mode: "subscription",
-    line_items: [{ price: STRIPE_PRO_PRICE_ID, quantity: 1 }],
-    success_url: `${appUrl}/dashboard?upgraded=1`,
-    cancel_url: `${appUrl}/pricing`,
-    subscription_data: {
-      metadata: { supabase_user_id: user.id },
+  // Key window: 1 minute — retries within that window reuse the same session
+  const sessionKey = `checkout-${user.id}-${Math.floor(Date.now() / 60_000)}`;
+
+  const session = await stripe.checkout.sessions.create(
+    {
+      customer: customerId,
+      mode: "subscription",
+      line_items: [{ price: STRIPE_PRO_PRICE_ID, quantity: 1 }],
+      success_url: `${appUrl}/dashboard?upgraded=1`,
+      cancel_url: `${appUrl}/pricing`,
+      subscription_data: {
+        metadata: { supabase_user_id: user.id },
+      },
     },
-  });
+    { idempotencyKey: sessionKey }
+  );
 
   return NextResponse.json({ url: session.url });
 }

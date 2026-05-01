@@ -60,7 +60,23 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
-  console.log(`[webhook] Received event: ${event.type}`);
+  console.log(`[webhook] Received event: ${event.type} id=${event.id}`);
+
+  // Deduplicate — Stripe retries on non-2xx; insert fails on duplicate primary key
+  const supabase = createAdminSupabase();
+  const { error: dedupError } = await supabase
+    .from("processed_stripe_events")
+    .insert({ event_id: event.id });
+
+  if (dedupError) {
+    if (dedupError.code === "23505") {
+      // Already processed — ack so Stripe stops retrying
+      console.log(`[webhook] Duplicate event skipped: ${event.id}`);
+      return NextResponse.json({ received: true });
+    }
+    // Non-duplicate DB error — log but continue processing rather than failing the webhook
+    console.error("[webhook] Dedup insert error:", dedupError);
+  }
 
   switch (event.type) {
     case "checkout.session.completed": {

@@ -8,7 +8,7 @@ export default async function SettingsPage() {
   const auth = await getAuthenticatedSupabase();
   if (!auth) redirect("/login");
 
-  const userPlan = await getUserPlan(auth.user.id);
+  const userPlan = await getUserPlan(auth.user.id, auth.supabase);
 
   const { data: profile } = await auth.supabase
     .from("profiles")

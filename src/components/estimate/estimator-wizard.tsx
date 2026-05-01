@@ -164,6 +164,14 @@ export function EstimatorWizard({
   }>({ type: "", stack: "", teamSize: "", phase: "", notes: "" });
   type OutputTab = "breakdown" | "client" | "advisor" | "template";
   const [outputTab, setOutputTab] = useState<OutputTab>("breakdown");
+  const [mountedTabs, setMountedTabs] = useState<Set<OutputTab>>(
+    () => new Set<OutputTab>(["breakdown"])
+  );
+
+  const handleTabChange = (tab: OutputTab) => {
+    setMountedTabs((prev) => new Set([...prev, tab]));
+    setOutputTab(tab);
+  };
 
   const selectionList = useMemo(
     () =>
@@ -181,15 +189,13 @@ export function EstimatorWizard({
     [selectedModules, customProviders]
   );
 
-  const estimationInput: EstimationInput | null =
-    selectionList.length > 0
-      ? {
-          modules: selectionList,
-          riskLevel,
-          urgencyLevel,
-          hourlyRate,
-        }
-      : null;
+  const estimationInput = useMemo<EstimationInput | null>(
+    () =>
+      selectionList.length > 0
+        ? { modules: selectionList, riskLevel, urgencyLevel, hourlyRate }
+        : null,
+    [selectionList, riskLevel, urgencyLevel, hourlyRate]
+  );
 
   const estimationResult = useMemo(() => {
     if (!estimationInput) {
@@ -202,6 +208,14 @@ export function EstimatorWizard({
     setSaveState("idle");
     setSavedId(null);
   }, [selectionList, riskLevel, urgencyLevel, hourlyRate]);
+
+  const clientSummaryForPanel = useMemo(
+    () =>
+      estimationInput && estimationResult
+        ? generateClientSummary({ input: estimationInput, result: estimationResult, modules })
+        : null,
+    [estimationInput, estimationResult, modules]
+  );
 
   const moduleBreakdown = useMemo(() => {
     if (!estimationResult || selectionList.length === 0) return [];
@@ -766,7 +780,7 @@ export function EstimatorWizard({
                   <button
                     key={tab.id}
                     type="button"
-                    onClick={() => setOutputTab(tab.id)}
+                    onClick={() => handleTabChange(tab.id)}
                     className={`relative px-4 py-2.5 text-sm font-medium transition-colors ${
                       outputTab === tab.id
                         ? "text-foreground after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px after:bg-foreground"
@@ -778,7 +792,7 @@ export function EstimatorWizard({
                 ))}
               </div>
 
-              {/* Tab content — all panels stay mounted to preserve state; hidden hides inactive ones */}
+              {/* Tab content — panels mount on first activation, then stay mounted to preserve state */}
               <div className="pt-6">
                 <div className={outputTab !== "breakdown" ? "hidden" : ""}>
                   <div className="grid gap-6 md:grid-cols-2">
@@ -928,38 +942,38 @@ export function EstimatorWizard({
                   )}
                 </div>
 
-                <div className={outputTab !== "client" ? "hidden" : ""}>
-                  <ClientSummaryPanel
-                    summary={generateClientSummary({
-                      input: estimationInput,
-                      result: estimationResult,
-                      modules,
-                    })}
-                    estimationInput={estimationInput}
-                    estimationResult={estimationResult}
-                    advisorContent={advisorContent}
-                    onSummaryTextChange={setSummaryMarkdown}
-                    initialGeneratedText={initialSummaryMarkdown}
-                  />
-                </div>
+                {mountedTabs.has("client") && (
+                  <div className={outputTab !== "client" ? "hidden" : ""}>
+                    <ClientSummaryPanel
+                      summary={clientSummaryForPanel!}
+                      estimationInput={estimationInput}
+                      estimationResult={estimationResult}
+                      advisorContent={advisorContent}
+                      onSummaryTextChange={setSummaryMarkdown}
+                      initialGeneratedText={initialSummaryMarkdown}
+                    />
+                  </div>
+                )}
 
-                <div className={outputTab !== "advisor" ? "hidden" : ""}>
-                  <ScopeAdvisorPanel
-                    estimationInput={estimationInput}
-                    projectContext={projectContext}
-                    documentTitles={initialDocumentTitles}
-                    initialContent={initialAdvisorContent}
-                    onAnalysisChange={setAdvisorContent}
-                    onAddToTemplate={(items) => {
-                      setTemplateItems((current) => {
-                        const next = new Set([...current, ...items]);
-                        return Array.from(next);
-                      });
-                    }}
-                  />
-                </div>
+                {mountedTabs.has("advisor") && (
+                  <div className={outputTab !== "advisor" ? "hidden" : ""}>
+                    <ScopeAdvisorPanel
+                      estimationInput={estimationInput}
+                      projectContext={projectContext}
+                      documentTitles={initialDocumentTitles}
+                      initialContent={initialAdvisorContent}
+                      onAnalysisChange={setAdvisorContent}
+                      onAddToTemplate={(items) => {
+                        setTemplateItems((current) => {
+                          const next = new Set([...current, ...items]);
+                          return Array.from(next);
+                        });
+                      }}
+                    />
+                  </div>
+                )}
 
-                {canGenerateTemplate && (
+                {canGenerateTemplate && mountedTabs.has("template") && (
                   <div className={outputTab !== "template" ? "hidden" : ""}>
                     <ScopeTemplatePanel
                       estimationInput={estimationInput}

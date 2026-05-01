@@ -17,7 +17,7 @@ export async function POST(
   const { id } = await params;
 
   // Share links are a Pro feature
-  const userPlan = await getUserPlan(user.id);
+  const userPlan = await getUserPlan(user.id, supabase);
   if (!userPlan.isProActive) {
     return NextResponse.json(
       { error: "upgrade_required", feature: "share_link" },

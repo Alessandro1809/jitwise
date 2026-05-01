@@ -8,25 +8,26 @@ export type UserPlan = {
   atEstimationLimit: boolean;
 };
 
+type SupabaseClient = Awaited<ReturnType<typeof createSupabaseServerClient>>;
+
 /**
  * Fetches the user's plan details and enforces lazy monthly reset
  * for the advisor usage counter.
  */
-export async function getUserPlan(userId: string): Promise<UserPlan> {
-  const supabase = await createSupabaseServerClient();
+export async function getUserPlan(userId: string, client?: SupabaseClient): Promise<UserPlan> {
+  const supabase = client ?? await createSupabaseServerClient();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select(
-      "plan, plan_expires_at, advisor_uses_this_month, advisor_month_reset"
-    )
-    .eq("id", userId)
-    .single();
-
-  const { count: estimationCount } = await supabase
-    .from("estimations")
-    .select("id", { count: "exact", head: true })
-    .eq("user_id", userId);
+  const [{ data: profile }, { count: estimationCount }] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("plan, plan_expires_at, advisor_uses_this_month, advisor_month_reset")
+      .eq("id", userId)
+      .single(),
+    supabase
+      .from("estimations")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", userId),
+  ]);
 
   const plan = (profile?.plan ?? "free") as "free" | "pro";
   const planExpiresAt = profile?.plan_expires_at

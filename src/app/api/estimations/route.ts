@@ -40,7 +40,7 @@ export async function POST(request: Request) {
   }
 
   // Enforce free plan estimation limit
-  const userPlan = await getUserPlan(auth.user.id);
+  const userPlan = await getUserPlan(auth.user.id, auth.supabase);
   if (userPlan.atEstimationLimit) {
     return NextResponse.json(
       { error: "limit_reached", limit: "estimations", current: userPlan.estimationCount },

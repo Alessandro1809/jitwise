@@ -35,7 +35,9 @@ export default async function EstimatePage({
       supabase
         .from("estimations")
         .select("id, input, result")
-        .eq("user_id", user.id),
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(50),
       supabase
         .from("estimation_outcomes")
         .select("estimation_id, actual_hours")

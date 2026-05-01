@@ -62,7 +62,7 @@ export default async function EstimationsPage({
   const { supabase, user } = auth;
   const [resolvedParams, userPlan] = await Promise.all([
     searchParams,
-    getUserPlan(user.id),
+    getUserPlan(user.id, supabase),
   ]);
   const page = Number(resolvedParams.page ?? "1");
   const safePage = Number.isNaN(page) || page < 1 ? 1 : page;

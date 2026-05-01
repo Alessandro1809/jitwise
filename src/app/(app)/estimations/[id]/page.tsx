@@ -34,29 +34,33 @@ export default async function EstimationDetailPage({
   }
 
   const { supabase, user } = auth;
-  const { data, error } = await supabase
-    .from("estimations")
-    .select("id, created_at, input, result, client_summary")
-    .eq("id", id)
-    .eq("user_id", user.id)
-    .single();
+  const [
+    { data, error },
+    { data: outcomeData },
+    { data: documentData },
+  ] = await Promise.all([
+    supabase
+      .from("estimations")
+      .select("id, created_at, input, result, client_summary")
+      .eq("id", id)
+      .eq("user_id", user.id)
+      .single(),
+    supabase
+      .from("estimation_outcomes")
+      .select("actual_hours, actual_cost, completed_at, notes")
+      .eq("estimation_id", id)
+      .eq("user_id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("documents")
+      .select("title")
+      .eq("estimation_id", id)
+      .eq("user_id", user.id),
+  ]);
 
   if (error || !data) {
     notFound();
   }
-
-  const { data: outcomeData } = await supabase
-    .from("estimation_outcomes")
-    .select("actual_hours, actual_cost, completed_at, notes")
-    .eq("estimation_id", id)
-    .eq("user_id", user.id)
-    .maybeSingle();
-
-  const { data: documentData } = await supabase
-    .from("documents")
-    .select("title")
-    .eq("estimation_id", id)
-    .eq("user_id", user.id);
 
   const documentTitles = (documentData ?? []).map((d: { title: string }) => d.title);
 
