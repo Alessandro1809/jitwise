@@ -147,6 +147,13 @@ export default function OnboardingPage() {
           >
             {submitting ? "Setting up…" : "Build my first estimate →"}
           </button>
+
+          <button
+            onClick={() => setStep(1)}
+            className="mt-3 w-full rounded-xl border border-border py-3 text-sm font-medium text-muted-foreground transition hover:border-foreground/30 hover:text-foreground"
+          >
+            ← Back
+          </button>
         </div>
       </div>
     </main>

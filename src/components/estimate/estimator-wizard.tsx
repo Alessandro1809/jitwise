@@ -382,18 +382,18 @@ export function EstimatorWizard({
               <Fragment key={item}>
                 {/* Step node as a tab */}
                 <div
-                  className="flex flex-col items-center gap-2"
+                  className={`flex flex-col items-center gap-2 ${isCompleted ? "cursor-pointer" : isCurrent ? "cursor-default" : "cursor-not-allowed opacity-50"}`}
                   role="tab"
                   aria-selected={isCurrent}
                   {...(isCurrent ? {'aria-current': 'step'} : {})}
-                  tabIndex={isCurrent ? 0 : -1}
+                  tabIndex={isCurrent || isCompleted ? 0 : -1}
                   aria-label={`Step ${item}: ${STEP_LABELS[item]}`}
-                  onClick={() => setStep(item)}
+                  onClick={() => (isCompleted || isCurrent) && setStep(item)}
                 >
                   <div
                     className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 text-xs font-bold transition-all duration-200 ${
                       isCompleted
-                        ? "border-[#00ACFF] bg-[#00ACFF] text-black"
+                        ? "border-jitcyan bg-jitcyan text-black"
                         : isCurrent
                           ? "border-foreground bg-foreground text-background"
                           : "border-border bg-transparent text-muted-foreground"
@@ -406,7 +406,7 @@ export function EstimatorWizard({
                       isCurrent
                         ? "text-foreground"
                         : isCompleted
-                          ? "text-[#00ACFF]/70"
+                          ? "text-jitcyan/70"
                           : "text-muted-foreground"
                     }`}
                   >
@@ -418,7 +418,7 @@ export function EstimatorWizard({
                 {!isLast && (
                   <div
                     className={`mx-3 mt-3.5 h-px flex-1 transition-colors duration-300 ${
-                      isCompleted ? "bg-[#00ACFF]/50" : "bg-border"
+                      isCompleted ? "bg-jitcyan/50" : "bg-border"
                     }`}
                   />
                 )}
@@ -432,20 +432,35 @@ export function EstimatorWizard({
         <div className="flex flex-col gap-6">
           {/* Preset banner */}
           {preset && !presetBannerDismissed && (
-            <div className="flex items-start gap-3 rounded-xl border-l-[3px] border-blue-500 bg-blue-500/10 px-4 py-3 text-sm">
+            <div className="flex items-start gap-3 rounded-xl border-l-[3px] border-jitcyan bg-jitcyan/10 px-4 py-3 text-sm">
               <span className="text-base">✨</span>
-              <p className="flex-1 text-blue-300">
+              <p className="flex-1 text-jitcyan/90">
                 Pre-loaded for <strong>{PROJECT_TYPE_LABELS[preset]}</strong> — customize as needed.
               </p>
               <button
                 onClick={() => setPresetBannerDismissed(true)}
-                className="shrink-0 text-xs text-blue-400/60 hover:text-blue-300"
+                className="cursor-pointer shrink-0 text-xs text-jitcyan/50 hover:text-jitcyan/80"
                 aria-label="Dismiss"
               >
                 ×
               </button>
             </div>
           )}
+
+          {/* Selection count */}
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-muted-foreground">
+              Select the modules that apply to your project.
+            </p>
+            {selectionList.length > 0 && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-jitcyan/15 px-2.5 py-0.5 text-xs font-semibold text-jitcyan">
+                <svg className="h-3 w-3" viewBox="0 0 10 8" fill="none">
+                  <path d="M1 4l2.5 2.5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                {selectionList.length} selected
+              </span>
+            )}
+          </div>
 
           {CATEGORY_ORDER.filter((cat) =>
             modules.some((m) => m.category === cat)
@@ -461,100 +476,116 @@ export function EstimatorWizard({
               const selectedComplexity = moduleState?.complexity ?? "standard";
               const selectedProvider = moduleState?.provider ?? module.providers?.[0];
               const hasProviders = module.providers && module.providers.length > 1;
-              const checkboxId = `module-${module.id}`;
 
               return (
                 <div
                   key={module.id}
-                  className={`rounded-xl border p-4 transition ${
+                  role="checkbox"
+                  aria-checked={isSelected}
+                  tabIndex={0}
+                  onClick={() => toggleModule(module.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === " " || e.key === "Enter") {
+                      e.preventDefault();
+                      toggleModule(module.id);
+                    }
+                  }}
+                  className={`cursor-pointer rounded-xl border p-4 transition-all duration-150 ${
                     isSelected
-                      ? "border-foreground/30 bg-foreground/5"
-                      : "border-border bg-background"
+                      ? "border-jitcyan/40 bg-jitcyan/5 ring-1 ring-jitcyan/20"
+                      : "border-border bg-background hover:border-foreground/20 hover:bg-foreground/5"
                   }`}
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex flex-col gap-2">
-                      <div className="flex items-center gap-3 text-sm font-semibold">
-                        <input
-                          id={checkboxId}
-                          type="checkbox"
-                          className="h-4 w-4 rounded border-border"
-                          checked={isSelected}
-                          onChange={() => toggleModule(module.id)}
-                        />
-                        <label htmlFor={checkboxId}>{module.name}</label>
-                      </div>
-                      <p className="mt-2 text-xs text-muted-foreground">
-                        {module.description}
-                      </p>
+                  <div className="flex items-start gap-3">
+                    {/* Custom checkbox indicator */}
+                    <div
+                      className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded border-2 transition-colors duration-150 ${
+                        isSelected
+                          ? "border-jitcyan bg-jitcyan"
+                          : "border-border bg-transparent"
+                      }`}
+                    >
+                      {isSelected && (
+                        <svg className="h-2.5 w-2.5 text-black" viewBox="0 0 10 8" fill="none">
+                          <path d="M1 4l2.5 2.5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      )}
                     </div>
-                    <div className="flex flex-col gap-2 text-xs text-muted-foreground">
-                      <span className="font-semibold uppercase tracking-[0.2em]">
-                        Complexity
-                      </span>
-                      <select
-                        aria-label={`${module.name} complexity`}
-                        className="rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground"
-                        value={selectedComplexity}
-                        disabled={!isSelected}
-                        onChange={(event) =>
-                          updateComplexity(
-                            module.id,
-                            event.target.value as ComplexityLevel
-                          )
-                        }
-                      >
-                        {module.complexity.map((level) => (
-                          <option key={level.level} value={level.level}>
-                            {level.level} ({level.points} pts)
-                          </option>
-                        ))}
-                      </select>
-                      {(() => {
-                        if (!isSelected || !calibrationHints) return null;
-                        const hint = calibrationHints.get(`${module.id}:${selectedComplexity}`);
-                        if (!hint || hint.sampleSize < 3 || hint.avgDeltaPct <= 10) return null;
-                        const nextLevel = selectedComplexity === "low" ? "Standard" : "High";
-                        return (
-                          <p className="mt-0.5 text-[11px] leading-snug text-amber-800 dark:text-amber-400">
-                            ⚠ Historically +{Math.round(hint.avgDeltaPct)}% over — consider {nextLevel}
-                          </p>
-                        );
-                      })()}
-                      {hasProviders && (
-                        <>
-                          <span className="mt-1 font-semibold uppercase tracking-[0.2em]">
-                            Provider
-                          </span>
-                          <select
-                            aria-label={`${module.name} provider`}
-                            className="rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground"
-                            value={selectedProvider}
-                            disabled={!isSelected}
-                            onChange={(event) =>
-                              updateProvider(module.id, event.target.value)
-                            }
-                          >
-                            {module.providers!.map((p) => (
-                              <option key={p} value={p}>
-                                {p}
-                              </option>
-                            ))}
-                            <option value="Other">Other…</option>
-                          </select>
-                          {isSelected && selectedProvider === "Other" && (
-                            <input
-                              type="text"
-                              aria-label={`${module.name} custom provider`}
-                              placeholder="Specify provider…"
-                              value={customProviders[module.id] ?? ""}
+
+                    <div className="flex flex-1 flex-col gap-1">
+                      <span className="text-sm font-semibold leading-snug">{module.name}</span>
+                      <p className="text-xs text-muted-foreground">{module.description}</p>
+
+                      {/* Controls — only shown when selected */}
+                      {isSelected && (
+                        <div
+                          className="mt-3 flex flex-wrap gap-3"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <div className="flex flex-col gap-1">
+                            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                              Complexity
+                            </span>
+                            <select
+                              aria-label={`${module.name} complexity`}
+                              className="rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground"
+                              value={selectedComplexity}
                               onChange={(event) =>
-                                updateCustomProvider(module.id, event.target.value)
+                                updateComplexity(module.id, event.target.value as ComplexityLevel)
                               }
-                              className="rounded-md border border-[#00ACFF]/50 bg-background px-2 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#00ACFF]/50"
-                            />
+                            >
+                              {module.complexity.map((level) => (
+                                <option key={level.level} value={level.level}>
+                                  {level.level} ({level.points} pts)
+                                </option>
+                              ))}
+                            </select>
+                            {(() => {
+                              if (!calibrationHints) return null;
+                              const hint = calibrationHints.get(`${module.id}:${selectedComplexity}`);
+                              if (!hint || hint.sampleSize < 3 || hint.avgDeltaPct <= 10) return null;
+                              const nextLevel = selectedComplexity === "low" ? "Standard" : "High";
+                              return (
+                                <p className="text-[10px] leading-snug text-amber-800 dark:text-amber-400">
+                                  ⚠ Historically +{Math.round(hint.avgDeltaPct)}% over — consider {nextLevel}
+                                </p>
+                              );
+                            })()}
+                          </div>
+
+                          {hasProviders && (
+                            <div className="flex flex-col gap-1">
+                              <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                                Provider
+                              </span>
+                              <select
+                                aria-label={`${module.name} provider`}
+                                className="rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground"
+                                value={selectedProvider}
+                                onChange={(event) =>
+                                  updateProvider(module.id, event.target.value)
+                                }
+                              >
+                                {module.providers!.map((p) => (
+                                  <option key={p} value={p}>{p}</option>
+                                ))}
+                                <option value="Other">Other…</option>
+                              </select>
+                              {selectedProvider === "Other" && (
+                                <input
+                                  type="text"
+                                  aria-label={`${module.name} custom provider`}
+                                  placeholder="Specify provider…"
+                                  value={customProviders[module.id] ?? ""}
+                                  onChange={(event) =>
+                                    updateCustomProvider(module.id, event.target.value)
+                                  }
+                                  className="rounded-md border border-jitcyan/50 bg-background px-2 py-1.5 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-jitcyan/50"
+                                />
+                              )}
+                            </div>
                           )}
-                        </>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -564,65 +595,123 @@ export function EstimatorWizard({
             </div>
           </div>
         ))}
-        {/* Mostrar mensaje de validación si no se selecciona ningún módulo */}
-        {step === 1 && Object.keys(selectedModules).length === 0 && (
-          <p className="mt-4 text-sm text-red-600">
-            Por favor selecciona al menos un módulo antes de continuar.
-          </p>
-        )}
+          {/* Sticky mini-footer with count + continue — only visible in step 1 */}
+          <div className="sticky bottom-4 z-10 mt-2">
+            <div className={`flex items-center justify-between rounded-xl border px-4 py-3 shadow-lg backdrop-blur-sm transition-all duration-200 ${
+              selectionList.length > 0
+                ? "border-jitcyan/30 bg-card/95"
+                : "border-border bg-card/90"
+            }`}>
+              <p className="text-sm text-muted-foreground">
+                {selectionList.length === 0
+                  ? "Select at least one module to continue."
+                  : `${selectionList.length} module${selectionList.length !== 1 ? "s" : ""} selected`}
+              </p>
+              <Button
+                disabled={!canAdvance}
+                onClick={() => setStep(2)}
+                className="h-8 px-4 text-xs"
+              >
+                Continue →
+              </Button>
+            </div>
+          </div>
         </div>
       )}
 
       {step === 2 && (
         <div className="grid gap-6 md:grid-cols-2">
+          {/* Risk level — segmented control */}
           <div className="flex flex-col gap-3 rounded-xl border border-border p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
               Risk level
             </p>
-            <select
-              className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-              value={riskLevel}
-              onChange={(event) => setRiskLevel(event.target.value as RiskLevel)}
-            >
-              <option value="low">Low (known scope)</option>
-              <option value="medium">Medium (some unknowns)</option>
-              <option value="high">High (complex or unclear)</option>
-            </select>
+            <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Risk level">
+              {(
+                [
+                  { value: "low", label: "Low", desc: "Known scope" },
+                  { value: "medium", label: "Medium", desc: "Some unknowns" },
+                  { value: "high", label: "High", desc: "Complex or unclear" },
+                ] as { value: RiskLevel; label: string; desc: string }[]
+              ).map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  role="radio"
+                  aria-checked={riskLevel === opt.value}
+                  onClick={() => setRiskLevel(opt.value)}
+                  className={`cursor-pointer flex flex-col items-center gap-1 rounded-lg border px-2 py-2.5 text-center transition-all duration-150 ${
+                    riskLevel === opt.value
+                      ? "border-jitcyan/50 bg-jitcyan/10 text-foreground"
+                      : "border-border bg-background text-muted-foreground hover:border-foreground/20 hover:bg-foreground/5"
+                  }`}
+                >
+                  <span className="text-xs font-semibold">{opt.label}</span>
+                  <span className="text-[10px] leading-snug opacity-70">{opt.desc}</span>
+                </button>
+              ))}
+            </div>
           </div>
+
+          {/* Urgency — segmented control */}
           <div className="flex flex-col gap-3 rounded-xl border border-border p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
               Urgency
             </p>
-            <select
-              className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-              value={urgencyLevel}
-              onChange={(event) =>
-                setUrgencyLevel(event.target.value as UrgencyLevel)
-              }
-            >
-              <option value="normal">Normal timeline</option>
-              <option value="expedite">Expedite</option>
-              <option value="rush">Rush</option>
-            </select>
+            <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Urgency level">
+              {(
+                [
+                  { value: "normal", label: "Normal", desc: "Standard timeline" },
+                  { value: "expedite", label: "Expedite", desc: "Faster delivery" },
+                  { value: "rush", label: "Rush", desc: "ASAP priority" },
+                ] as { value: UrgencyLevel; label: string; desc: string }[]
+              ).map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  role="radio"
+                  aria-checked={urgencyLevel === opt.value}
+                  onClick={() => setUrgencyLevel(opt.value)}
+                  className={`cursor-pointer flex flex-col items-center gap-1 rounded-lg border px-2 py-2.5 text-center transition-all duration-150 ${
+                    urgencyLevel === opt.value
+                      ? "border-jitcyan/50 bg-jitcyan/10 text-foreground"
+                      : "border-border bg-background text-muted-foreground hover:border-foreground/20 hover:bg-foreground/5"
+                  }`}
+                >
+                  <span className="text-xs font-semibold">{opt.label}</span>
+                  <span className="text-[10px] leading-snug opacity-70">{opt.desc}</span>
+                </button>
+              ))}
+            </div>
           </div>
+
+          {/* Hourly rate with $ prefix */}
           <div className="flex flex-col gap-3 rounded-xl border border-border p-4 md:col-span-2">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
               Hourly rate
             </p>
-            <input
-              type="number"
-              min={1}
-              step={1}
-              className="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-              value={hourlyRate}
-              onChange={(event) =>
-                setHourlyRate(
-                  Number.isNaN(Number(event.target.value))
-                    ? 0
-                    : Number(event.target.value)
-                )
-              }
-            />
+            <div className="flex items-center overflow-hidden rounded-xl border border-border bg-card">
+              <span className="border-r border-border px-4 py-3 text-sm font-semibold text-muted-foreground">
+                $
+              </span>
+              <input
+                type="number"
+                min={1}
+                step={1}
+                className="flex-1 bg-transparent px-4 py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground/50"
+                value={hourlyRate}
+                onChange={(event) =>
+                  setHourlyRate(
+                    Number.isNaN(Number(event.target.value))
+                      ? 0
+                      : Number(event.target.value)
+                  )
+                }
+              />
+              <span className="border-l border-border px-4 py-3 text-sm text-muted-foreground">
+                /hr
+              </span>
+            </div>
           </div>
 
           {/* Project context — optional, enriches AI analysis */}
@@ -796,7 +885,7 @@ export function EstimatorWizard({
                     key={tab.id}
                     type="button"
                     onClick={() => handleTabChange(tab.id)}
-                    className={`relative px-4 py-2.5 text-sm font-medium transition-colors ${
+                    className={`cursor-pointer relative px-4 py-2.5 text-sm font-medium transition-colors ${
                       outputTab === tab.id
                         ? "text-foreground after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px after:bg-foreground"
                         : "text-muted-foreground hover:text-foreground"
@@ -1012,7 +1101,7 @@ export function EstimatorWizard({
 
       <div className="flex flex-col gap-4 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-          <span className="text-[#00ACFF]">{step}</span>
+          <span className="text-jitcyan">{step}</span>
           <span>/</span>
           <span>3</span>
           <span className="ml-1 hidden sm:inline">&mdash; {STEP_LABELS[step]}</span>
