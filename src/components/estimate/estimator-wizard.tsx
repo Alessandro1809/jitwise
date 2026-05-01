@@ -80,7 +80,22 @@ export function EstimatorWizard({
   preset,
   initialHourlyRate,
 }: EstimatorWizardProps) {
-  const [step, setStep] = useState<Step>(1);
+  // Persist and restore current step across sessions
+  const [step, setStep] = useState<Step>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = parseInt(localStorage.getItem('estimator_wizard_step') || '', 10);
+      if ([1, 2, 3].includes(saved)) {
+        return saved as Step;
+      }
+    }
+    return 1;
+  });
+  // Update persisted step when it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('estimator_wizard_step', step.toString());
+    }
+  }, [step]);
   const [presetBannerDismissed, setPresetBannerDismissed] = useState(false);
 
   const [selectedModules, setSelectedModules] = useState<
